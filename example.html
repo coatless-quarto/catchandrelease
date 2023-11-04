@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Catch and Release Example</title>
+<title>Example</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -78,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Basics</a></li><li class="breadcrumb-item"><a href="./example.html">Catch and Release Example</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Basics</a></li><li class="breadcrumb-item"><a href="./example.html">Example</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -116,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./example.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Catch and Release Example</span></a>
+ <span class="menu-text">Example</span></a>
   </div>
 </li>
       </ul>
@@ -130,9 +130,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Basics</a></li><li class="breadcrumb-item"><a href="./example.html">Catch and Release Example</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Basics</a></li><li class="breadcrumb-item"><a href="./example.html">Example</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Catch and Release Example</h1>
+<h1 class="title">Example</h1>
 </div>
 
 
@@ -149,6 +149,10 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="demo-of-catchandrelease" class="level1">
+<h1>Demo of <code>catchandrelease</code></h1>
+<section id="catch-code" class="level2">
+<h2 class="anchored" data-anchor-id="catch-code">Catch Code</h2>
 <p>This filter is designed to extract the text from the following code blocks:</p>
 <pre class="{test-python}"><code>1 + 1</code></pre>
 <pre class="{test-r}"><code>print("hello")</code></pre>
@@ -158,11 +162,16 @@ ul.task-list li input[type="checkbox"] {
 
 mean(x)</code></pre>
 <pre class="{test-empty}"><code></code></pre>
+</section>
+<section id="release" class="level2">
+<h2 class="anchored" data-anchor-id="release">Release</h2>
 <p>Once the code is extracted, the filter will then insert at the end of the document the lines of code via <code>JSON</code>.</p>
 <hr>
 
 
-<p>[{"code":"1 + 1"},{"code":"print(\"hello\")"},{"code":""},{"code":"sd(c(1,2,3))"},{"code":"x = c(1,2,3) mean(x)"},{"code":""}]</p>
+<p>[{"code":"1 + 1"},{"code":"print(\"hello\")"},{"code":""},{"code":"sd(c(1,2,3))"},{"code":"x = c(1,2,3)\n\nmean(x)"},{"code":""}]</p>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

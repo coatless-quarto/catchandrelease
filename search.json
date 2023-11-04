@@ -2,12 +2,34 @@
   {
     "objectID": "example.html",
     "href": "example.html",
-    "title": "Catch and Release Example",
+    "title": "Example",
     "section": "",
-    "text": "This filter is designed to extract the text from the following code blocks:\n1 + 1\nprint(\"hello\")\n\nsd(c(1,2,3))\nx = c(1,2,3)\n\nmean(x)\n\nOnce the code is extracted, the filter will then insert at the end of the document the lines of code via JSON.\n\n\n\n[{\"code\":\"1 + 1\"},{\"code\":\"print(\\\"hello\\\")\"},{\"code\":\"\"},{\"code\":\"sd(c(1,2,3))\"},{\"code\":\"x = c(1,2,3) mean(x)\"},{\"code\":\"\"}]",
+    "text": "This filter is designed to extract the text from the following code blocks:\n1 + 1\nprint(\"hello\")\n\nsd(c(1,2,3))\nx = c(1,2,3)\n\nmean(x)\n\n\n\n\nOnce the code is extracted, the filter will then insert at the end of the document the lines of code via JSON.\n\n\n\n[{\"code\":\"1 + 1\"},{\"code\":\"print(\\\"hello\\\")\"},{\"code\":\"\"},{\"code\":\"sd(c(1,2,3))\"},{\"code\":\"x = c(1,2,3)\\n\\nmean(x)\"},{\"code\":\"\"}]",
     "crumbs": [
       "Basics",
-      "Catch and Release Example"
+      "Example"
+    ]
+  },
+  {
+    "objectID": "example.html#catch-code",
+    "href": "example.html#catch-code",
+    "title": "Example",
+    "section": "",
+    "text": "This filter is designed to extract the text from the following code blocks:\n1 + 1\nprint(\"hello\")\n\nsd(c(1,2,3))\nx = c(1,2,3)\n\nmean(x)",
+    "crumbs": [
+      "Basics",
+      "Example"
+    ]
+  },
+  {
+    "objectID": "example.html#release",
+    "href": "example.html#release",
+    "title": "Example",
+    "section": "",
+    "text": "Once the code is extracted, the filter will then insert at the end of the document the lines of code via JSON.\n\n\n\n[{\"code\":\"1 + 1\"},{\"code\":\"print(\\\"hello\\\")\"},{\"code\":\"\"},{\"code\":\"sd(c(1,2,3))\"},{\"code\":\"x = c(1,2,3)\\n\\nmean(x)\"},{\"code\":\"\"}]",
+    "crumbs": [
+      "Basics",
+      "Example"
     ]
   },
   {
@@ -15,7 +37,7 @@
     "href": "index.html",
     "title": "Home",
     "section": "",
-    "text": "The catchandrelease extension is an experiment designed to explore identify, storing, and placing text elsewhere in the document.\n\n\n\nIt’s important to note that the catchandrelease extension doesn’t introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to identify, retrieve, and place flagged content.\n\n\n\nTo install the catchandrelease extension, open your terminal and execute the following command:\nquarto add coatless-quarto/catchandrelease\nThis command will download and install the extension under the _extensions subdirectory of your Quarto project. If you’re using version control, make sure to include this directory in your repository.",
+    "text": "The catchandrelease extension is a unique experiment designed to explore the identification, storage, and relocation of text within your Quarto documents.",
     "crumbs": [
       "Basics",
       "Home"
@@ -25,8 +47,8 @@
     "objectID": "index.html#usage",
     "href": "index.html#usage",
     "title": "Home",
-    "section": "",
-    "text": "It’s important to note that the catchandrelease extension doesn’t introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to identify, retrieve, and place flagged content.",
+    "section": "Usage",
+    "text": "Usage\nThe catchandrelease extension does not introduce significant enhancements to your document’s content. Instead, it serves as an instructive example of how to identify, retrieve, and reposition content within your Quarto project.",
     "crumbs": [
       "Basics",
       "Home"
@@ -36,8 +58,41 @@
     "objectID": "index.html#installation",
     "href": "index.html#installation",
     "title": "Home",
-    "section": "",
-    "text": "To install the catchandrelease extension, open your terminal and execute the following command:\nquarto add coatless-quarto/catchandrelease\nThis command will download and install the extension under the _extensions subdirectory of your Quarto project. If you’re using version control, make sure to include this directory in your repository.",
+    "section": "Installation",
+    "text": "Installation\nTo install the catchandrelease extension, follow these steps:\n\nOpen your terminal.\nExecute the following command:\n\nquarto add coatless-quarto/catchandrelease\nThis command will download and install the extension under the _extensions subdirectory of your Quarto project. If you are using version control, ensure that you include this directory in your repository.",
+    "crumbs": [
+      "Basics",
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#capturing-code",
+    "href": "index.html#capturing-code",
+    "title": "Home",
+    "section": "Capturing Code",
+    "text": "Capturing Code\nIn Pandoc, various Lua Types each have their own element filter functions that can be applied throughout a document. For example, when creating a code cell using Markdown like this:\n```{webr-r}\n# R code here\n```\nInternally, Pandoc treats this as a CodeBlock. To “capture” code, you can provide a custom filter function for this specific Lua type. For instance, you can traverse and process each CodeBlock element using the following Lua code:\nfunction CodeBlock(elem)\n    -- Display the text of the CodeBlock\n    quarto.log.output(elem.text)\n\n    -- Return the CodeBlock unchanged\n    return elem\n}\nWith some modifications, you can extract the text from each code block and store it within a global table:\n-- Define a table to store the extracted code and attributes\nlocal codeBlocksTable = {}\n\nfunction captureCode(elem)\n  -- Extract code text and store it in a table\n  local codeBlockData = {\n    codeValue = elem.code\n  }\n  \n  -- Append the table to the codeBlocksTable\n  table.insert(codeBlocksTable, codeBlockData)\n  \n  -- Return the CodeBlock unchanged\n  return elem\n}\n\n-- Override Element filter function for CodeBlock\nreturn {\n  { CodeBlock = captureCode }\n}",
+    "crumbs": [
+      "Basics",
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#releasing",
+    "href": "index.html#releasing",
+    "title": "Home",
+    "section": "Releasing",
+    "text": "Releasing\nThe second part of the process involves releasing the captured content back into the document. There are various options for releasing the data, such as marking it up using other Inline or Block styles. Alternatively, you can merge and release the data, which is the approach taken here. This requires two functions: data combination and insertion.\nFor data combination, it is simpler to use JSON encoding of the Lua table storing the CodeBlock details, e.g., quarto.json.encode().\nFor the insertion part, you can provide a custom Pandoc function like this:\n-- Call the function to combine CodeBlocks and write the output to the end of the document\nlocal function releaseCode(doc)\n\n  -- Convert the Lua table to JSON\n  local jsonCode = writeCodeBlocksToJson()\n\n  -- Create a new paragraph with the combined code \n  local para = pandoc.Para(jsonCode)\n\n  -- Add it to the end of the document\n  table.insert(doc.blocks, para)\n\n  -- Return the modified document\n  return doc\n}\n\n-- Override Element filter functions\nreturn {\n  { CodeBlock = captureCode },\n  { Pandoc = releaseCode}\n}\nFor more details, refer to the _extensions/ directory in the Quarto project’s repository.",
+    "crumbs": [
+      "Basics",
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#note",
+    "href": "index.html#note",
+    "title": "Home",
+    "section": "Note",
+    "text": "Note\nThe order in which the filter functions are applied follows the Typewise traversal default sequence:\n\nFunctions for Inline elements\nThe Inlines filter function\nFunctions for Block elements\nThe Blocks filter function\nThe Meta filter function\nThe Pandoc filter function (last)\n\nTo enable further customization of the catching and releasing mechanism, you can define a custom Meta function, e.g., customMeta(), and specify the order as follows:\nreturn {\n  { Meta = customMeta},            -- (1)\n  { CodeBlock = captureCode },     -- (2)\n  { Pandoc = releaseCode }         -- (3)\n}",
     "crumbs": [
       "Basics",
       "Home"

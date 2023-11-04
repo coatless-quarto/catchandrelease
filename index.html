@@ -150,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./example.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Catch and Release Example</span></a>
+ <span class="menu-text">Example</span></a>
   </div>
 </li>
       </ul>
@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Basics</a></li><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Home</h1>
-<p class="subtitle lead">Demo Website</p>
+<p class="subtitle lead">catchandrelease: A Quarto Experiment on Re-organzing</p>
 </div>
 
 
@@ -184,23 +184,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="catchandrelease-a-quarto-experiment-on-re-organzing" class="level1">
-<h1>catchandrelease: A Quarto Experiment on Re-organzing</h1>
-<p>The <code>catchandrelease</code> extension is an experiment designed to explore identify, storing, and placing text elsewhere in the document.</p>
+<p>The <code>catchandrelease</code> extension is a unique experiment designed to explore the identification, storage, and relocation of text within your Quarto documents.</p>
 <p><a href="https://codespaces.new/coatless-quarto/catchandrelease"><img src="https://github.com/codespaces/badge.svg" class="img-fluid" alt="Open in GitHub Codespaces"></a></p>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
-<p>It’s important to note that the <code>catchandrelease</code> extension doesn’t introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to identify, retrieve, and place flagged content.</p>
+<p>The <code>catchandrelease</code> extension does not introduce significant enhancements to your document’s content. Instead, it serves as an instructive example of how to identify, retrieve, and reposition content within your Quarto project.</p>
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>To install the <code>catchandrelease</code> extension, open your terminal and execute the following command:</p>
+<p>To install the <code>catchandrelease</code> extension, follow these steps:</p>
+<ol type="1">
+<li><p>Open your terminal.</p></li>
+<li><p>Execute the following command:</p></li>
+</ol>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> add coatless-quarto/catchandrelease</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This command will download and install the extension under the <code>_extensions</code> subdirectory of your Quarto project. If you’re using version control, make sure to include this directory in your repository.</p>
+<p>This command will download and install the extension under the <code>_extensions</code> subdirectory of your Quarto project. If you are using version control, ensure that you include this directory in your repository.</p>
 </section>
+<section id="capturing-code" class="level2">
+<h2 class="anchored" data-anchor-id="capturing-code">Capturing Code</h2>
+<p>In Pandoc, various <a href="https://pandoc.org/lua-filters.html#lua-type-reference">Lua Types</a> each have their own element filter functions that can be applied throughout a document. For example, when creating a code cell using Markdown like this:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{webr-r}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="in"># R code here</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Internally, Pandoc treats this as a <a href="https://pandoc.org/lua-filters.html#type-codeblock">CodeBlock</a>. To “capture” code, you can provide a custom filter function for this specific Lua type. For instance, you can traverse and process each <code>CodeBlock</code> element using the following Lua code:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> CodeBlock<span class="op">(</span><span class="va">elem</span><span class="op">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Display the text of the CodeBlock</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">quarto</span><span class="op">.</span><span class="va">log</span><span class="op">.</span>output<span class="op">(</span><span class="va">elem</span><span class="op">.</span><span class="va">text</span><span class="op">)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Return the CodeBlock unchanged</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">elem</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With some modifications, you can extract the text from each code block and store it within a global table:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Define a table to store the extracted code and attributes</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="va">codeBlocksTable</span> <span class="op">=</span> <span class="op">{}</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> captureCode<span class="op">(</span><span class="va">elem</span><span class="op">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Extract code text and store it in a table</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">local</span> <span class="va">codeBlockData</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">codeValue</span> <span class="op">=</span> <span class="va">elem</span><span class="op">.</span><span class="va">code</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Append the table to the codeBlocksTable</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table.insert</span><span class="op">(</span><span class="va">codeBlocksTable</span><span class="op">,</span> <span class="va">codeBlockData</span><span class="op">)</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Return the CodeBlock unchanged</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">elem</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">-- Override Element filter function for CodeBlock</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="op">{</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> <span class="cn">C</span><span class="va">odeBlock</span> <span class="op">=</span> <span class="va">captureCode</span> <span class="op">}</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="fin" class="level1">
-<h1>Fin</h1>
+<section id="releasing" class="level2">
+<h2 class="anchored" data-anchor-id="releasing">Releasing</h2>
+<p>The second part of the process involves releasing the captured content back into the document. There are various options for releasing the data, such as marking it up using other <code>Inline</code> or <code>Block</code> styles. Alternatively, you can merge and release the data, which is the approach taken here. This requires two functions: data combination and insertion.</p>
+<p>For data combination, it is simpler to use JSON encoding of the Lua table storing the CodeBlock details, e.g., <a href="https://quarto.org/docs/extensions/lua-api.html#json-encoding"><code>quarto.json.encode()</code></a>.</p>
+<p>For the insertion part, you can provide a custom <a href="https://pandoc.org/lua-filters.html#type-pandoc"><code>Pandoc</code></a> function like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Call the function to combine CodeBlocks and write the output to the end of the document</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="kw">function</span> releaseCode<span class="op">(</span><span class="va">doc</span><span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Convert the Lua table to JSON</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">local</span> <span class="va">jsonCode</span> <span class="op">=</span> writeCodeBlocksToJson<span class="op">()</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Create a new paragraph with the combined code </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">local</span> <span class="va">para</span> <span class="op">=</span> <span class="va">pandoc</span><span class="op">.</span>Para<span class="op">(</span><span class="va">jsonCode</span><span class="op">)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Add it to the end of the document</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table.insert</span><span class="op">(</span><span class="va">doc</span><span class="op">.</span><span class="va">blocks</span><span class="op">,</span> <span class="va">para</span><span class="op">)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Return the modified document</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">doc</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">-- Override Element filter functions</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="op">{</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> <span class="cn">C</span><span class="va">odeBlock</span> <span class="op">=</span> <span class="va">captureCode</span> <span class="op">},</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> <span class="cn">P</span><span class="va">andoc</span> <span class="op">=</span> <span class="va">releaseCode</span><span class="op">}</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For more details, refer to the <code>_extensions/</code> directory in the Quarto project’s repository.</p>
+</section>
+<section id="note" class="level2">
+<h2 class="anchored" data-anchor-id="note">Note</h2>
+<p>The order in which the filter functions are applied follows the <a href="https://pandoc.org/lua-filters.html#typewise-traversal">Typewise traversal</a> default sequence:</p>
+<ol type="1">
+<li>Functions for Inline elements</li>
+<li>The Inlines filter function</li>
+<li>Functions for Block elements</li>
+<li>The Blocks filter function</li>
+<li>The Meta filter function</li>
+<li>The Pandoc filter function (last)</li>
+</ol>
+<p>To enable further customization of the catching and releasing mechanism, you can define a custom Meta function, e.g., <code>customMeta()</code>, and specify the order as follows:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode lua code-with-copy"><code class="sourceCode lua"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> <span class="cn">M</span><span class="va">eta</span> <span class="op">=</span> <span class="va">customMeta</span><span class="op">},</span>            <span class="co">-- (1)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> <span class="cn">C</span><span class="va">odeBlock</span> <span class="op">=</span> <span class="va">captureCode</span> <span class="op">},</span>     <span class="co">-- (2)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> <span class="cn">P</span><span class="va">andoc</span> <span class="op">=</span> <span class="va">releaseCode</span> <span class="op">}</span>         <span class="co">-- (3)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
 <p>By using these techniques, you can efficiently re-organize content inside of Quarto.</p>
 
 
