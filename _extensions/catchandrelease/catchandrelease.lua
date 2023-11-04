@@ -1,44 +1,56 @@
--- Initialize a global table to store the CodeDiv elements
-_G.codeDivs = {}
+-- Initialize a table to store the CodeDiv elements
+local capturedCodeBlocks = {}
+
+-- Store the number of CodeBlocks visited
+local counterCodeBlock = 0
 
 -- Retrieve all CodeBlocks and store them individually. 
 local function captureCode(elem)
 
-    -- Check if the CodeBlock contains any options
-    local options = {}
-    local code = elem.text
-    for line in elem.text:gmatch('[^\n]+') do
-        local key, value = line:match('#|%s*(%w+)%s*:%s*(%S+)')
-        if key and value then
-            options[key] = value
-        end
-    end
+  -- Extract the code
+  local code = elem.text
 
-    -- Increment the order
-    _G.order = (_G.order or 0) + 1
-
-    -- Create a custom Div element to store the code and options
-    local codeDiv = pandoc.Div({
-      code
-    })
-
-    -- codeDiv.attr({cellid = _G.order, options = options})
+  -- Check if the CodeBlock contains any options
+  local codeBlockOptions = {}
   
-    -- Store the CodeDiv in the global table
-    table.insert(_G.codeDivs, codeDiv)
+  for line in elem.text:gmatch('[^\n]+') do
+      local key, value = line:match('#|%s*(%w+)%s*:%s*(%S+)')
+      if key and value then
+        codeBlockOptions[key] = value
+      end
+  end
 
-    -- Return to keep the original CodeBlock in the document
-    return elem
+  -- Merge the attributes into the codeBlockData table
+  for key, value in pairs(elem.attributes) do
+    codeBlockOptions[key] = value
+  end
+
+  -- Increment the order
+  counterCodeBlock = counterCodeBlock + 1
+
+  -- Create a new table for the CodeBlock
+  local codeBlockData = {
+    id = counterCodeBlock,
+    code = code,
+    attrs = codeBlockOptions
+  }
+
+  -- Store the CodeDiv in the global table
+  table.insert(capturedCodeBlocks, codeBlockData)
+
+  -- Return to keep the original CodeBlock in the document
+  return elem
 end
 
 -- Define a function to combine CodeDivs into a string
-local function combineCodeDivs()
+local function combineCodeBlocksAsString()
 
   local combinedCode = ""
 
   -- Combine the elements inside the Div
-  for _, codeDiv in pairs(_G.codeDivs) do
-    combinedCode = combinedCode .. pandoc.utils.stringify(codeDiv) .. ","
+  for _, codeCell in ipairs(capturedCodeBlocks) do
+    local codeValue = codeCell.code
+    combinedCode = combinedCode .. pandoc.utils.stringify(codeValue) .. ","
   end
 
   -- Remove the trailing comma
@@ -47,16 +59,17 @@ local function combineCodeDivs()
   return combinedCode
 end
 
--- Define a function to write the global table to a JSON file
-function writeCodeDivsToJson()
+-- Define a function to write the CodeBlocks table to a JSON file
+function writeCodeBlocksToJson()
   -- Setup a table for JSON
   local jsonTable = {}
 
   -- Iterate through items
-  for _, codeDiv in pairs(_G.codeDivs) do
-      table.insert(jsonTable, {
-          code = pandoc.utils.stringify(codeDiv)
-      })
+  for _, codeCell in ipairs(capturedCodeBlocks) do
+    local codeValue = codeCell.code
+    table.insert(jsonTable, {
+        code = pandoc.utils.stringify(codeValue)
+    })
   end
 
   -- Serialize the table to JSON
@@ -65,14 +78,14 @@ function writeCodeDivsToJson()
   return jsonStr
 end
 
--- Call the function to combine CodeDivs and write the output to the end of the document
-local function injectCode(doc)
+-- Call the function to combine CodeBlocks and write the output to the end of the document
+local function releaseCode(doc)
 
   -- Write the content out as a string
-  -- local combinedCode = combineCodeDivs()
+  -- local combinedCode = combineCodeBlocksAsString()
 
   -- Write JSON code out
-  local jsonCode = writeCodeDivsToJson()
+  local jsonCode = writeCodeBlocksToJson()
 
   -- Create a new paragraph with the combined code 
   local para = pandoc.Para(jsonCode)
@@ -83,17 +96,9 @@ local function injectCode(doc)
   return doc
 end
 
--- Typewise traversal order: https://pandoc.org/lua-filters.html#typewise-traversal
--- 1. functions for Inline elements,
--- 2. the Inlines filter function,
--- 3. functions for Block elements ,
--- 4. the Blocks filter function,
--- 5. the Meta filter function, and last
--- 6. the Pandoc filter function.
--- Order can be changed by modifying the return order. 
-
+-- Specify traversal order
 return {
   { CodeBlock = captureCode },     -- (1)
-  { Pandoc = injectCode }          -- (2)
+  { Pandoc = releaseCode }          -- (2)
 }
 
