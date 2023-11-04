@@ -1,0 +1,12 @@
+project:
+  type: website
+
+website:
+  sidebar:
+    style: "floating"
+    search: true
+    contents:
+      - section: "Basics"
+        contents:
+          - index.qmd
+          - example.qmd
