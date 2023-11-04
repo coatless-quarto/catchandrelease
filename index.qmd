@@ -1,6 +1,9 @@
 ---
-title: "catchandrelease: A Quarto Experiment on Re-organzing"
+title: "Home"
+subtitle: "Demo Website"
 ---
+
+# catchandrelease: A Quarto Experiment on Re-organzing
 
 The `catchandrelease` extension is an experiment designed to explore identify, storing, and placing text elsewhere in the document.
 
