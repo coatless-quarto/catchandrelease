@@ -1,0 +1,21 @@
+---
+title: "Collect Example"
+filters:
+  - collect
+---
+
+This filter is designed to extract the text from the following code blocks:
+
+```{test-python}
+1 + 1
+```
+
+```{test-r}
+print("hello")
+```
+
+Once the code is extracted, the filter will then insert at the end of the document the lines of code via `JSON`. 
+
+---
+
+
