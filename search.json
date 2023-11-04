@@ -1,0 +1,46 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "catchandrelease: A Quarto Experiment on Re-organzing",
+    "section": "",
+    "text": "The catchandrelease extension is an experiment designed to explore identify, storing, and placing text elsewhere in the document.",
+    "crumbs": [
+      "Basics",
+      "catchandrelease: A Quarto Experiment on Re-organzing"
+    ]
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "catchandrelease: A Quarto Experiment on Re-organzing",
+    "section": "Usage",
+    "text": "Usage\nIt’s important to note that the catchandrelease extension doesn’t introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to identify, retrieve, and place flagged content.",
+    "crumbs": [
+      "Basics",
+      "catchandrelease: A Quarto Experiment on Re-organzing"
+    ]
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "catchandrelease: A Quarto Experiment on Re-organzing",
+    "section": "Installation",
+    "text": "Installation\nTo install the catchandrelease extension, open your terminal and execute the following command:\nquarto add coatless-quarto/catchandrelease\nThis command will download and install the extension under the _extensions subdirectory of your Quarto project. If you’re using version control, make sure to include this directory in your repository.",
+    "crumbs": [
+      "Basics",
+      "catchandrelease: A Quarto Experiment on Re-organzing"
+    ]
+  },
+  {
+    "objectID": "example.html",
+    "href": "example.html",
+    "title": "Catch and Release Example",
+    "section": "",
+    "text": "This filter is designed to extract the text from the following code blocks:\n1 + 1\nprint(\"hello\")\n\nsd(c(1,2,3))\nx = c(1,2,3)\n\nmean(x)\n\nOnce the code is extracted, the filter will then insert at the end of the document the lines of code via JSON.\n\n\n\n[{\"code\":\"1 + 1\"},{\"code\":\"print(\\\"hello\\\")\"},{\"code\":\"\"},{\"code\":\"sd(c(1,2,3))\"},{\"code\":\"x = c(1,2,3) mean(x)\"},{\"code\":\"\"}]",
+    "crumbs": [
+      "Basics",
+      "Catch and Release Example"
+    ]
+  }
+]
