@@ -1,29 +1,132 @@
 ---
 title: "Home"
-subtitle: "Demo Website"
+subtitle: "catchandrelease: A Quarto Experiment on Re-organzing"
 ---
 
-# catchandrelease: A Quarto Experiment on Re-organzing
-
-The `catchandrelease` extension is an experiment designed to explore identify, storing, and placing text elsewhere in the document.
+The `catchandrelease` extension is a unique experiment designed to explore the identification, storage, and relocation of text within your Quarto documents.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/coatless-quarto/catchandrelease)
 
 ## Usage
 
-It's important to note that the `catchandrelease` extension doesn't introduce any significant improvements to your document content. Instead, it serves as a valuable example of how to identify, retrieve, and place flagged content.
+The `catchandrelease` extension does not introduce significant enhancements to your document's content. Instead, it serves as an instructive example of how to identify, retrieve, and reposition content within your Quarto project.
 
 ## Installation
 
-To install the `catchandrelease` extension, open your terminal and execute the following command:
+To install the `catchandrelease` extension, follow these steps:
+
+1. Open your terminal.
+
+2. Execute the following command:
 
 ```bash
 quarto add coatless-quarto/catchandrelease
 ```
 
-This command will download and install the extension under the `_extensions` subdirectory of your Quarto project. If you're using version control, make sure to include this directory in your repository.
+This command will download and install the extension under the `_extensions` subdirectory of your Quarto project. If you are using version control, ensure that you include this directory in your repository.
 
+## Capturing Code
 
-# Fin
+In Pandoc, various [Lua Types](https://pandoc.org/lua-filters.html#lua-type-reference) each have their own element filter functions that can be applied throughout a document. For example, when creating a code cell using Markdown like this:
+
+````markdown
+```{r}
+# R code here
+```
+````
+
+Internally, Pandoc treats this as a [CodeBlock](https://pandoc.org/lua-filters.html#type-codeblock). To "capture" code, you can provide a custom filter function for this specific Lua type. For instance, you can traverse and process each `CodeBlock` element using the following Lua code:
+
+```lua
+function CodeBlock(elem)
+    -- Display the text of the CodeBlock
+    quarto.log.output(elem.text)
+
+    -- Return the CodeBlock unchanged
+    return elem
+}
+```
+
+With some modifications, you can extract the text from each code block and store it within a global table:
+
+```lua
+-- Define a table to store the extracted code and attributes
+local codeBlocksTable = {}
+
+function captureCode(elem)
+  -- Extract code text and store it in a table
+  local codeBlockData = {
+    codeValue = elem.code
+  }
+  
+  -- Append the table to the codeBlocksTable
+  table.insert(codeBlocksTable, codeBlockData)
+  
+  -- Return the CodeBlock unchanged
+  return elem
+}
+
+-- Override Element filter function for CodeBlock
+return {
+  { CodeBlock = captureCode }
+}
+```
+
+## Releasing
+
+The second part of the process involves releasing the captured content back into the document. There are various options for releasing the data, such as marking it up using other `Inline` or `Block` styles. Alternatively, you can merge and release the data, which is the approach taken here. This requires two functions: data combination and insertion.
+
+For data combination, it is simpler to use JSON encoding of the Lua table storing the CodeBlock details, e.g., [`quarto.json.encode()`](https://quarto.org/docs/extensions/lua-api.html#json-encoding).
+
+For the insertion part, you can provide a custom [`Pandoc`](https://pandoc.org/lua-filters.html#type-pandoc) function like this:
+
+```lua
+-- Call the function to combine CodeBlocks and write the output to the end of the document
+local function releaseCode(doc)
+
+  -- Convert the Lua table to JSON
+  local jsonCode = writeCodeBlocksToJson()
+
+  -- Create a new paragraph with the combined code 
+  local para = pandoc.Para(jsonCode)
+
+  -- Add it to the end of the document
+  table.insert(doc.blocks, para)
+
+  -- Return the modified document
+  return doc
+}
+
+-- Override Element filter functions
+return {
+  { CodeBlock = captureCode },
+  { Pandoc = releaseCode}
+}
+```
+
+For more details, refer to the `_extensions/` directory in the Quarto project's repository.
+
+## Note
+
+The order in which the filter functions are applied follows the [Typewise traversal](https://pandoc.org/lua-filters.html#typewise-traversal) default sequence:
+
+1. Functions for Inline elements
+2. The Inlines filter function
+3. Functions for Block elements
+4. The Blocks filter function
+5. The Meta filter function
+6. The Pandoc filter function (last)
+
+To enable further customization of the catching and releasing mechanism, you can define a custom Meta function, e.g., `customMeta()`, and specify the order as follows:
+
+```lua
+return {
+  { Meta = customMeta},            -- (1)
+  { CodeBlock = captureCode },     -- (2)
+  { Pandoc = releaseCode }         -- (3)
+}
+```
+
+# Conclusion
 
 By using these techniques, you can efficiently re-organize content inside of Quarto.
