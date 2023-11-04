@@ -1,8 +1,12 @@
 ---
-title: "Catch and Release Example"
+title: "Example"
 filters:
   - catchandrelease
 ---
+
+# Demo of `catchandrelease`
+
+## Catch Code
 
 This filter is designed to extract the text from the following code blocks:
 
@@ -31,7 +35,10 @@ mean(x)
 ```{test-empty}
 ```
 
+## Release
+
 Once the code is extracted, the filter will then insert at the end of the document the lines of code via `JSON`. 
+
 
 ---
 
