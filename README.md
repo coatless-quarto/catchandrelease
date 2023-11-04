@@ -27,7 +27,7 @@ This command will download and install the extension under the `_extensions` sub
 In Pandoc, various [Lua Types](https://pandoc.org/lua-filters.html#lua-type-reference) each have their own element filter functions that can be applied throughout a document. For example, when creating a code cell using Markdown like this:
 
 ````markdown
-```{r}
+```{webr-r}
 # R code here
 ```
 ````
